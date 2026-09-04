@@ -1,6 +1,37 @@
-﻿import { useRef } from "react";
+import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { SectionHeader } from "./AboutSection";
+
+const contactLinks = [
+  {
+    icon: "📧",
+    label: "Email",
+    value: "manickamsiva2003@gmail.com",
+    href: "mailto:manickamsiva2003@gmail.com",
+    color: "#3b82f6",
+  },
+  {
+    icon: "💼",
+    label: "LinkedIn",
+    value: "linkedin.com/in/siva-m-627281239",
+    href: "https://www.linkedin.com/in/siva-m-627281239",
+    color: "#60a5fa",
+  },
+  {
+    icon: "🐱",
+    label: "GitHub",
+    value: "github.com/manickamSiva",
+    href: "https://github.com/manickamSiva",
+    color: "#8b949e",
+  },
+  {
+    icon: "📍",
+    label: "Location",
+    value: "Tamil Nadu, India",
+    href: null,
+    color: "#484f58",
+  },
+];
 
 export default function ContactSection() {
   const ref = useRef(null);
@@ -41,39 +72,63 @@ export default function ContactSection() {
 
           {/* Contact grid */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.85rem", marginBottom: "2.5rem" }}>
-            {[
-              { icon: "📧", label: "Email", value: "siva@example.com", color: "#3b82f6" },
-              { icon: "💼", label: "LinkedIn", value: "linkedin.com/in/sivam", color: "#60a5fa" },
-              { icon: "🐱", label: "GitHub", value: "github.com/sivam", color: "#8b949e" },
-              { icon: "📍", label: "Location", value: "Tamil Nadu, India", color: "#484f58" },
-            ].map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 16 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.25 + i * 0.08 }}
-                whileHover={{ background: "#1c2333", borderColor: "#30363d" }}
-                style={{
-                  padding: "1.1rem 1.25rem",
-                  background: "#161b22",
-                  border: "1px solid #21262d",
-                  borderRadius: "10px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.85rem",
-                  transition: "all 0.2s ease",
-                  cursor: "default",
-                }}
-              >
-                <span style={{ fontSize: "1.2rem" }}>{item.icon}</span>
-                <div>
-                  <p style={{ fontSize: "0.65rem", color: item.color, fontFamily: "monospace", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "2px" }}>
-                    {item.label}
-                  </p>
-                  <p style={{ color: "#8b949e", fontSize: "0.82rem" }}>{item.value}</p>
-                </div>
-              </motion.div>
-            ))}
+            {contactLinks.map((item, i) => {
+              const inner = (
+                <>
+                  <span style={{ fontSize: "1.2rem" }}>{item.icon}</span>
+                  <div>
+                    <p style={{
+                      fontSize: "0.65rem", color: item.color,
+                      fontFamily: "monospace", letterSpacing: "1px",
+                      textTransform: "uppercase", marginBottom: "2px",
+                    }}>
+                      {item.label}
+                    </p>
+                    <p style={{ color: item.href ? "#c9d1d9" : "#8b949e", fontSize: "0.82rem" }}>
+                      {item.value}
+                    </p>
+                  </div>
+                </>
+              );
+
+              const sharedStyle: React.CSSProperties = {
+                padding: "1.1rem 1.25rem",
+                background: "#161b22",
+                border: "1px solid #21262d",
+                borderRadius: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.85rem",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+              };
+
+              return item.href ? (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  target={item.href.startsWith("mailto") ? "_self" : "_blank"}
+                  rel="noopener noreferrer"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.25 + i * 0.08 }}
+                  whileHover={{ background: "#1c2333", borderColor: "#30363d" }}
+                  style={sharedStyle}
+                >
+                  {inner}
+                </motion.a>
+              ) : (
+                <motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.25 + i * 0.08 }}
+                  style={{ ...sharedStyle, cursor: "default" }}
+                >
+                  {inner}
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* CTA */}
@@ -84,7 +139,7 @@ export default function ContactSection() {
             style={{ textAlign: "center" }}
           >
             <motion.a
-              href="mailto:siva@example.com"
+              href="mailto:manickamsiva2003@gmail.com"
               whileHover={{ scale: 1.04, boxShadow: "0 0 28px rgba(59,130,246,0.3)" }}
               whileTap={{ scale: 0.97 }}
               style={{
@@ -124,7 +179,7 @@ export default function ContactSection() {
       >
         <p>Built with React · Three.js · Framer Motion</p>
         <p style={{ marginTop: "0.4rem" }}>
-          © 2025 Siva M &nbsp;·&nbsp;
+          © 2026 Siva M &nbsp;·&nbsp;
           <span style={{ color: "#60a5fa" }}>Blue Team</span> &nbsp;·&nbsp;
           <span style={{ color: "#8b949e" }}>SOC Analyst</span>
         </p>
