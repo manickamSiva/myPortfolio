@@ -6,8 +6,8 @@ const contactLinks = [
   {
     icon: "📧",
     label: "Email",
-    value: "manickamsiva2003@gmail.com",
-    href: "mailto:manickamsiva2003@gmail.com",
+    value: "manickamsiva617@gmail.com",
+    href: "mailto:manickamsiva617@gmail.com",
     color: "#3b82f6",
   },
   {
@@ -139,7 +139,7 @@ export default function ContactSection() {
             style={{ textAlign: "center" }}
           >
             <motion.a
-              href="mailto:manickamsiva2003@gmail.com"
+              href="mailto:manickamsiva617@gmail.com"
               whileHover={{ scale: 1.04, boxShadow: "0 0 28px rgba(59,130,246,0.3)" }}
               whileTap={{ scale: 0.97 }}
               style={{
