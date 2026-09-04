@@ -37,27 +37,29 @@ const contactLinks = [
 
 export default function ContactSection() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, {
+    once: true,
+    margin: "-80px",
+  });
 
   const [showForm, setShowForm] = useState(false);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
-  const [attachment, setAttachment] = useState<File | null>(null);
+
+  const openEmail = () => {
+    window.location.href = `mailto:${MY_EMAIL}`;
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const body = `${message}${
-      attachment
-        ? `\n\nAttachment: ${attachment.name}\n(Please attach this file manually before sending.)`
-        : ""
-    }`;
+    const mailtoUrl =
+      `mailto:${MY_EMAIL}` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(message)}`;
 
-    const mailto = `mailto:${MY_EMAIL}?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    window.location.href = mailto;
+    // Open the visitor's default email application
+    window.location.href = mailtoUrl;
   };
 
   return (
@@ -71,20 +73,43 @@ export default function ContactSection() {
         zIndex: 1,
       }}
     >
-      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+      <div
+        style={{
+          maxWidth: "700px",
+          margin: "0 auto",
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          animate={
+            inView
+              ? {
+                  opacity: 1,
+                  y: 0,
+                }
+              : {}
+          }
+          transition={{
+            duration: 0.6,
+          }}
         >
           <SectionHeader label="06" title="Get In Touch" />
 
           {!showForm ? (
             <>
+              {/* Description */}
               <motion.p
                 initial={{ opacity: 0 }}
-                animate={inView ? { opacity: 1 } : {}}
-                transition={{ delay: 0.25 }}
+                animate={
+                  inView
+                    ? {
+                        opacity: 1,
+                      }
+                    : {}
+                }
+                transition={{
+                  delay: 0.25,
+                }}
                 style={{
                   color: "#6e7f8d",
                   fontSize: "0.93rem",
@@ -94,10 +119,16 @@ export default function ContactSection() {
                 }}
               >
                 I am actively seeking entry-level{" "}
-                <span style={{ color: "#60a5fa" }}>Blue Team</span> or{" "}
-                <span style={{ color: "#93c5fd" }}>SOC Analyst</span>{" "}
-                opportunities. Whether you have a role, a question, or just
-                want to connect — feel free to reach out.
+                <span style={{ color: "#60a5fa" }}>
+                  Blue Team
+                </span>{" "}
+                or{" "}
+                <span style={{ color: "#93c5fd" }}>
+                  SOC Analyst
+                </span>{" "}
+                opportunities. Whether you have a role, a
+                question, or just want to connect — feel free to
+                reach out.
               </motion.p>
 
               {/* Contact Cards */}
@@ -112,7 +143,11 @@ export default function ContactSection() {
                 {contactLinks.map((item, i) => {
                   const inner = (
                     <>
-                      <span style={{ fontSize: "1.2rem" }}>
+                      <span
+                        style={{
+                          fontSize: "1.2rem",
+                        }}
+                      >
                         {item.icon}
                       </span>
 
@@ -132,7 +167,9 @@ export default function ContactSection() {
 
                         <p
                           style={{
-                            color: item.href ? "#c9d1d9" : "#8b949e",
+                            color: item.href
+                              ? "#c9d1d9"
+                              : "#8b949e",
                             fontSize: "0.82rem",
                           }}
                         >
@@ -154,20 +191,58 @@ export default function ContactSection() {
                     transition: "all 0.2s ease",
                   };
 
+                  if (item.label === "Email") {
+                    return (
+                      <motion.button
+                        key={item.label}
+                        type="button"
+                        onClick={openEmail}
+                        initial={{
+                          opacity: 0,
+                          y: 16,
+                        }}
+                        animate={
+                          inView
+                            ? {
+                                opacity: 1,
+                                y: 0,
+                              }
+                            : {}
+                        }
+                        transition={{
+                          delay: 0.25 + i * 0.08,
+                        }}
+                        whileHover={{
+                          background: "#1c2333",
+                          borderColor: "#30363d",
+                        }}
+                        style={{
+                          ...sharedStyle,
+                          cursor: "pointer",
+                          textAlign: "left",
+                        }}
+                      >
+                        {inner}
+                      </motion.button>
+                    );
+                  }
+
                   return item.href ? (
                     <motion.a
                       key={item.label}
                       href={item.href}
-                      target={
-                        item.href.startsWith("mailto")
-                          ? "_self"
-                          : "_blank"
-                      }
+                      target="_blank"
                       rel="noopener noreferrer"
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{
+                        opacity: 0,
+                        y: 16,
+                      }}
                       animate={
                         inView
-                          ? { opacity: 1, y: 0 }
+                          ? {
+                              opacity: 1,
+                              y: 0,
+                            }
                           : {}
                       }
                       transition={{
@@ -184,10 +259,16 @@ export default function ContactSection() {
                   ) : (
                     <motion.div
                       key={item.label}
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{
+                        opacity: 0,
+                        y: 16,
+                      }}
                       animate={
                         inView
-                          ? { opacity: 1, y: 0 }
+                          ? {
+                              opacity: 1,
+                              y: 0,
+                            }
                           : {}
                       }
                       transition={{
@@ -206,23 +287,36 @@ export default function ContactSection() {
 
               {/* Send Message Button */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{
+                  opacity: 0,
+                  scale: 0.95,
+                }}
                 animate={
                   inView
-                    ? { opacity: 1, scale: 1 }
+                    ? {
+                        opacity: 1,
+                        scale: 1,
+                      }
                     : {}
                 }
-                transition={{ delay: 0.65 }}
-                style={{ textAlign: "center" }}
+                transition={{
+                  delay: 0.65,
+                }}
+                style={{
+                  textAlign: "center",
+                }}
               >
                 <motion.button
+                  type="button"
                   onClick={() => setShowForm(true)}
                   whileHover={{
                     scale: 1.04,
                     boxShadow:
                       "0 0 28px rgba(59,130,246,0.3)",
                   }}
-                  whileTap={{ scale: 0.97 }}
+                  whileTap={{
+                    scale: 0.97,
+                  }}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
@@ -244,161 +338,168 @@ export default function ContactSection() {
             </>
           ) : (
             /* ================= MESSAGE FORM ================= */
-            <motion.form
-              onSubmit={handleSubmit}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: 20,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              transition={{
+                duration: 0.4,
+              }}
               style={{
                 marginTop: "2rem",
-                background: "#161b22",
-                border: "1px solid #21262d",
-                borderRadius: "12px",
-                padding: "1.5rem",
               }}
             >
-              {/* Subject */}
-              <label
+              <form
+                onSubmit={handleSubmit}
                 style={{
-                  display: "block",
-                  color: "#8b949e",
-                  fontSize: "0.75rem",
-                  fontFamily: "monospace",
-                  marginBottom: "0.5rem",
+                  background: "#161b22",
+                  border: "1px solid #21262d",
+                  borderRadius: "12px",
+                  padding: "1.5rem",
                 }}
               >
-                SUBJECT
-              </label>
-
-              <input
-                type="text"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="Enter subject"
-                required
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px",
-                  marginBottom: "1.2rem",
-                  background: "#0d1117",
-                  border: "1px solid #30363d",
-                  borderRadius: "7px",
-                  color: "#c9d1d9",
-                  outline: "none",
-                  fontSize: "0.9rem",
-                }}
-              />
-
-              {/* Message */}
-              <label
-                style={{
-                  display: "block",
-                  color: "#8b949e",
-                  fontSize: "0.75rem",
-                  fontFamily: "monospace",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                MESSAGE
-              </label>
-
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write your message..."
-                required
-                rows={7}
-                style={{
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px",
-                  marginBottom: "1.2rem",
-                  background: "#0d1117",
-                  border: "1px solid #30363d",
-                  borderRadius: "7px",
-                  color: "#c9d1d9",
-                  outline: "none",
-                  fontSize: "0.9rem",
-                  resize: "vertical",
-                  fontFamily: "inherit",
-                }}
-              />
-
-              {/* Attachment */}
-              <label
-                style={{
-                  display: "block",
-                  color: "#8b949e",
-                  fontSize: "0.75rem",
-                  fontFamily: "monospace",
-                  marginBottom: "0.5rem",
-                }}
-              >
-                ATTACHMENT
-              </label>
-
-              <input
-                type="file"
-                onChange={(e) =>
-                  setAttachment(e.target.files?.[0] || null)
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "1.5rem",
-                  color: "#8b949e",
-                  fontSize: "0.8rem",
-                }}
-              />
-
-              {/* Buttons */}
-              <div
-                style={{
-                  display: "flex",
-                  gap: "0.75rem",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <button
-                  type="button"
-                  onClick={() => setShowForm(false)}
+                {/* Subject */}
+                <label
                   style={{
-                    padding: "11px 20px",
-                    background: "transparent",
+                    display: "block",
+                    color: "#8b949e",
+                    fontSize: "0.75rem",
+                    fontFamily: "monospace",
+                    marginBottom: "0.5rem",
+                    letterSpacing: "1px",
+                  }}
+                >
+                  SUBJECT
+                </label>
+
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) =>
+                    setSubject(e.target.value)
+                  }
+                  placeholder="Enter subject"
+                  required
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    padding: "12px",
+                    marginBottom: "1.25rem",
+                    background: "#0d1117",
                     border: "1px solid #30363d",
                     borderRadius: "7px",
-                    color: "#8b949e",
-                    cursor: "pointer",
+                    color: "#c9d1d9",
+                    outline: "none",
+                    fontSize: "0.9rem",
                   }}
-                >
-                  Cancel
-                </button>
+                />
 
-                <button
-                  type="submit"
+                {/* Message */}
+                <label
                   style={{
-                    padding: "11px 24px",
-                    background: "#3b82f6",
-                    border: "none",
-                    borderRadius: "7px",
-                    color: "#fff",
-                    fontWeight: 600,
-                    cursor: "pointer",
+                    display: "block",
+                    color: "#8b949e",
+                    fontSize: "0.75rem",
+                    fontFamily: "monospace",
+                    marginBottom: "0.5rem",
+                    letterSpacing: "1px",
                   }}
                 >
-                  Open Email →
-                </button>
-              </div>
-            </motion.form>
+                  MESSAGE
+                </label>
+
+                <textarea
+                  value={message}
+                  onChange={(e) =>
+                    setMessage(e.target.value)
+                  }
+                  placeholder="Write your message..."
+                  required
+                  rows={8}
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    padding: "12px",
+                    marginBottom: "1.5rem",
+                    background: "#0d1117",
+                    border: "1px solid #30363d",
+                    borderRadius: "7px",
+                    color: "#c9d1d9",
+                    outline: "none",
+                    fontSize: "0.9rem",
+                    resize: "vertical",
+                    fontFamily: "inherit",
+                  }}
+                />
+
+                {/* Buttons */}
+                <div
+                  style={{
+                    display: "flex",
+                    gap: "0.75rem",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false);
+                      setSubject("");
+                      setMessage("");
+                    }}
+                    style={{
+                      padding: "11px 20px",
+                      background: "transparent",
+                      border: "1px solid #30363d",
+                      borderRadius: "7px",
+                      color: "#8b949e",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="submit"
+                    style={{
+                      padding: "11px 24px",
+                      background: "#3b82f6",
+                      border: "none",
+                      borderRadius: "7px",
+                      color: "#fff",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Open Email →
+                  </button>
+                </div>
+              </form>
+            </motion.div>
           )}
         </motion.div>
       </div>
 
       {/* Footer */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ delay: 1 }}
+        initial={{
+          opacity: 0,
+        }}
+        animate={
+          inView
+            ? {
+                opacity: 1,
+              }
+            : {}
+        }
+        transition={{
+          delay: 1,
+        }}
         style={{
           textAlign: "center",
           marginTop: "4.5rem",
@@ -409,13 +510,23 @@ export default function ContactSection() {
           fontFamily: "monospace",
         }}
       >
-        <p>Built with React · Three.js · Framer Motion</p>
+        <p>
+          Built with React · Three.js · Framer Motion
+        </p>
 
-        <p style={{ marginTop: "0.4rem" }}>
+        <p
+          style={{
+            marginTop: "0.4rem",
+          }}
+        >
           © 2026 Siva M &nbsp;·&nbsp;
-          <span style={{ color: "#60a5fa" }}>Blue Team</span>{" "}
+          <span style={{ color: "#60a5fa" }}>
+            Blue Team
+          </span>{" "}
           &nbsp;·&nbsp;
-          <span style={{ color: "#8b949e" }}>SOC Analyst</span>
+          <span style={{ color: "#8b949e" }}>
+            SOC Analyst
+          </span>
         </p>
       </motion.div>
 
